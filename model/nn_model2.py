@@ -1,8 +1,4 @@
-from re import S
-from tkinter.messagebox import NO
-from unicodedata import name
-from unittest import result
-from pip import main
+
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -33,9 +29,9 @@ class Solution:
 
 
     def hook(self): #정의, 훈련, 실행시키는 메소들로 나뉠 예정. 최소 3개
-        s = Solution()
-        s.create_nn_model()
-        s.train_nn_model()
+        
+        self.create_nn_model()
+        self.train_nn_model()
 
     def create_nn_model(self) :
         self.X = tf.placeholder(tf.float32)

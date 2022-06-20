@@ -7,28 +7,35 @@ tf.disable_v2_behavior()
 import numpy as np
 
 class Solution():
-    def __init__(self) -> None:
-        pass
+    def __init__(self, x_data, y_data) -> object:
+        self.x_data = x_data
+        self.y_data = y_data
+        self.train_op = None
+        self.X = None
+        self.Y = None
+        self.cost = None
+        self.model = None
+        self.sess = None
         
 
     def create(self):
         # *******
         # 신경망 모델 구성
         # *******
-        X = tf.placeholder(tf.float32)
-        Y = tf.placeholder(tf.float32)
+        self.X = tf.placeholder(tf.float32)
+        self.Y = tf.placeholder(tf.float32)
 
-        W = tf.Variable(tf.random_uniform([2, 3], -1, 1.))
+        self.W = tf.Variable(tf.random_uniform([2, 3], -1, 1.))
         # 신경망 neural network 앞으로는 nn 으로 표기
         # nn 은 2차원으로 [입력층(특성), 출력층(레이블)] -> [2, 3] 으로 정합니다
 
-        b = tf.Variable(tf.zeros([3]))
+        self.b = tf.Variable(tf.zeros([3]))
         # b 는 편향. 앞으로 편향은 b 로 표기
         # W 는 가중치. 앞으로는 가중치는 W 로 표기
         # b 는 각 레이어의 아웃풋 갯수로 설정함.
         # b 는 최종 결과값의 분류 갯수인 3으로 설정함.
 
-        L = tf.add(tf.matmul(X, W), b)
+        L = tf.add(tf.matmul(self.X,self. W), self.b)
         # 가중치와 편향을 이용해 계산한 결과 값에
         L = tf.nn.relu(L)
         # TF 에서 기본적으로 제공하는 활성화 함수인 ReLU 함수를 적용
@@ -37,15 +44,18 @@ class Solution():
         # softmax() 를 사용해서 출력값을 사용하기 쉽게 만듦
         # 소프트맥스 함수는 다음처럼 결과값을 전체합이 1인 확률로 만들어주는 함수
         # 예) [8.04, 2.76, -6.52] -> [0.53, 0.24, 0.23]
-
-        cost = tf.reduce_mean(-tf.reduce_sum(Y * tf.log(model), axis = 1))
+        print(f'모델 내부 보기 {model}')
+        cost = tf.reduce_mean(-tf.reduce_sum(self.Y * tf.log(model), axis = 1))
         optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
-        train_op = optimizer.minimize(cost)
-
+        self.train_op = optimizer.minimize(cost)
+        self.model = model
         # 비용함수를 최소화 시키면 -> 경사도를 0로 만들어 가면 그 값이 최적화된 값일 것이다...
 
     def fit(self):
         train_op = self.train_op
+        X = self.X
+        Y = self.Y
+        cost = self.cost
         # **********
         # 신경망 학습 모델
         # **********
@@ -57,13 +67,17 @@ class Solution():
             sess.run(train_op, {X: x_data, Y: y_data})
             if (step + 1) % 10 == 10:
                 print(step +1, sess.run(cost, {X: x_data, Y: y_data}))
+        self.sess = sess
+
     def eval(self):
-        model = self.model
-
-
         # *********
         # 결과확인
         # ********
+        model = self.model
+        Y = self.Y
+        X= self.X
+        sess = self.sess
+        
         prediction = tf.argmax(model, 1)
         target = tf.argmax(Y, 1)
         print('예측값', sess.run(prediction, {X: x_data}))
