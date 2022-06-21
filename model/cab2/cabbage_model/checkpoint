@@ -1,0 +1,2 @@
+model_checkpoint_path: "c:\\Users\\tep01\\Melbourne\\flask\\model\\cab2\\cabbage_model\\cabbage.ckpt-1000"
+all_model_checkpoint_paths: "c:\\Users\\tep01\\Melbourne\\flask\\model\\cab2\\cabbage_model\\cabbage.ckpt-1000"

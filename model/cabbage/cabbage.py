@@ -7,6 +7,9 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from config import basedir
 from icecream import ic
 
+
+
+
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
@@ -16,10 +19,13 @@ class Solution():
        self.df = None
        self.x_data = None
        self.y_data = None
+       ic(self.x_data)
 
 
     def hook(self):
         self.processing()
+        self.create_model()
+        self.load_model()
         
 
     def processing(self): #모델생성
@@ -73,11 +79,15 @@ class Solution():
         saver = tf.train.Saver()
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
-            saver.restore(sess, '')
+            saver.restore(sess, os.path.join(self.model, 'cabbage.ckpt-1000'))
+            data = [[avgTemp,minTemp,maxTemp,rainFall]]
+            arr = np.array(data, dtype=np.float32)
+            dict = sess.run(tf.matmul(X,W)+b, {X: arr[0:4]})
+            print(dict)
+        return int(dict[0])
 
 
         
 
 if __name__=='__main__':
-    #Solution().processing()
-    Solution().create_model()
+    Solution().hook()
