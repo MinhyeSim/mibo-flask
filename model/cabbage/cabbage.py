@@ -4,6 +4,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from config import basedir
+
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
@@ -18,8 +19,8 @@ class Solution():
         self.create_model()
 
     def read(self):
-        df = pd.read_csv('./data/price_data.csv', encoding='UTF-8')
-        print (df)
+        df = pd.read_csv('./data/price_data.csv', encoding='UTF-8', thousands=',')
+        #print (df)
         df.to_csv('./save/price_data.csv', index=False)
 
     def processing(self):
@@ -30,12 +31,7 @@ class Solution():
         _ = tf.Variable(initial_value = 'fake_variable')
         sess.run(tf.global_variables_initializer())
         saver = tf.train.Saver()
-        saver.save(sess, os.path.join(self.model, 'cabbage', 'model'), global_step=1000)
-
-        
-
-    
-    
+        saver.save(sess, os.path.join(self.model, 'cabbage'), global_step=1000) 
 
 if __name__=='__main__':
     Solution().hook()
